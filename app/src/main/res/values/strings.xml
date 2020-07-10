@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">JuniorProject</string>
+
+    <!-- 리스트 화면 ListActivity -->
+    <string name="btn_server">서버에서 정보 받아오기</string>
+    <string name="btn_realm_select">Realm Select</string>
+    <string name="btn_realm_delete">Realm Delete</string>
+
+    <!-- 상세 화면 -->
+    <string name="btn_update">수정</string>
+    <string name="btn_delete">삭제</string>
+    <string name="user_info_01">결혼유무</string>
+    <string name="user_info_02">상세 주거형태</string>
+    <string name="user_info_03">성별</string>
+    <string name="user_info_04">연령대</string>
+    <string name="user_info_05">월 평균 소득</string>
+    <string name="user_info_06">자녀</string>
+    <string name="user_info_07">자녀의 수</string>
+    <string name="user_info_08">자녀의 연령</string>
+    <string name="user_info_09">주거 형태</string>
+    <string name="user_info_10">지역</string>
+    <string name="user_info_11">직업</string>
+    <string name="user_info_12">학력</string>
+
+</resources>
