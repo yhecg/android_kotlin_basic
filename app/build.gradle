@@ -35,6 +35,11 @@ android {
         unitTests.returnDefaultValues = true
     }
 
+    // Realm 동기화
+    realm {
+        syncEnabled = true
+    }
+
 }
 
 dependencies {

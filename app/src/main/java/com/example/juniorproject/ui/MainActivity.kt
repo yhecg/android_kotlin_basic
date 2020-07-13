@@ -106,7 +106,7 @@ class MainActivity : BaseActivity() {
                     adapter.list.add(dto)
                 }
                 adapter.notifyDataSetChanged()
-                binding.rvTotalUserInfoList.scrollToPosition(dbResultSize - 1)
+//                binding.rvTotalUserInfoList.scrollToPosition(dbResultSize - 1)
             }else{
                 adapter.notifyDataSetChanged()
             }
