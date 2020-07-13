@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.juniorproject.R
 import com.example.juniorproject.databinding.ActivityMainBinding
 import com.example.juniorproject.db.realm.RealmManager
-import com.example.juniorproject.db.realm.module.RealmTotalUserInfoModule
+import com.example.juniorproject.db.realm.module.RealmTotalUserInfoModel
 import com.example.juniorproject.network.RetrofitApiId
 import com.example.juniorproject.network.RetrofitClient
 import com.example.juniorproject.network.dto.ResponseCommonData
@@ -21,8 +21,6 @@ import com.google.gson.GsonBuilder
 import io.realm.Realm
 import io.realm.RealmResults
 import org.json.JSONObject
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 import kotlin.Exception
 
 /**
@@ -119,8 +117,8 @@ class MainActivity : BaseActivity() {
     fun setRealmDataUpdate(position:Int){
         try {
             mRealm.beginTransaction()
-            val result: RealmTotalUserInfoModule? =
-                mRealm.where(RealmTotalUserInfoModule::class.java).
+            val result: RealmTotalUserInfoModel? =
+                mRealm.where(RealmTotalUserInfoModel::class.java).
                 equalTo("idx", adapter.list[position].idx).findFirst()
             result?.type = "수정완료"
             mRealm.commitTransaction()
@@ -135,8 +133,8 @@ class MainActivity : BaseActivity() {
     fun setRealmDataDelete(){
         try {
             mRealm.beginTransaction()
-            val result: RealmResults<RealmTotalUserInfoModule> =
-                mRealm.where(RealmTotalUserInfoModule::class.java).findAll()
+            val result: RealmResults<RealmTotalUserInfoModel> =
+                mRealm.where(RealmTotalUserInfoModel::class.java).findAll()
             result.deleteAllFromRealm()
             mRealm.commitTransaction()
 
@@ -147,14 +145,14 @@ class MainActivity : BaseActivity() {
     }
 
     // realm 데이터 보기
-    fun getRealmData(): MutableList<RealmTotalUserInfoModule>? {
+    fun getRealmData(): MutableList<RealmTotalUserInfoModel>? {
         try{
             mRealm.beginTransaction()
-            val result:RealmResults<RealmTotalUserInfoModule> =
-                mRealm.where(RealmTotalUserInfoModule::class.java).findAll()
+            val result:RealmResults<RealmTotalUserInfoModel> =
+                mRealm.where(RealmTotalUserInfoModel::class.java).findAll()
 
             // RealmResults 객체 -> 리스트로 변환
-            val dbList: MutableList<RealmTotalUserInfoModule>? = mRealm.copyFromRealm(result)
+            val dbList: MutableList<RealmTotalUserInfoModel>? = mRealm.copyFromRealm(result)
 
             // 리스트 -> json 으로 변환
             val gson = GsonBuilder().create()
@@ -182,14 +180,14 @@ class MainActivity : BaseActivity() {
 
                 // DB realm 작업 시작
                 mRealm.beginTransaction()
-                val idx = mRealm.where(RealmTotalUserInfoModule::class.java).max("idx")
+                val idx = mRealm.where(RealmTotalUserInfoModel::class.java).max("idx")
                 val nextId = if(idx == null){
                     1
                 }else{
                     idx.toInt()+1
                 }
-                val module: RealmTotalUserInfoModule = mRealm.createObject(
-                    RealmTotalUserInfoModule::class.java, nextId)
+                val model: RealmTotalUserInfoModel = mRealm.createObject(
+                    RealmTotalUserInfoModel::class.java, nextId)
 
                 while(keys.hasNext()){
                     val key:String = keys.next()
@@ -204,11 +202,11 @@ class MainActivity : BaseActivity() {
                     }
                     LogUtil.d(TAG, " [ key : $key ] - [ value : $sb ]")
                     when(key){
-                        "type" -> module.type = sb.toString()
-                        "error" -> module.error = sb.toString()
-                        "estimated_data" -> module.estimated_data = sb.toString()
-                        "original_data" -> module.original_data = sb.toString()
-                        "reliability" -> module.reliability = sb.toString()
+                        "type" -> model.type = sb.toString()
+                        "error" -> model.error = sb.toString()
+                        "estimated_data" -> model.estimated_data = sb.toString()
+                        "original_data" -> model.original_data = sb.toString()
+                        "reliability" -> model.reliability = sb.toString()
                     }
                 }
                 // DB realm 작업 종료

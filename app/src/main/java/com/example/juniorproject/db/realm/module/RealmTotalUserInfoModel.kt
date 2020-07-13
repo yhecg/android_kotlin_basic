@@ -5,7 +5,7 @@ import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
 
 @RealmClass
-open class RealmTotalUserInfoModule : RealmObject() {
+open class RealmTotalUserInfoModel : RealmObject() {
 
     @PrimaryKey var idx: Int = 0
     var type: String? = ""
