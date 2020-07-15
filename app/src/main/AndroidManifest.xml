@@ -14,7 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="n">
-        <activity android:name=".WebViewTestActivity"></activity>
+        <activity android:name=".example.mvvm_fragment.VmSharedActivity"></activity>
+        <activity android:name=".example.mvvm_activity.TestActivity" />
+        <activity android:name=".WebViewTestActivity" />
         <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

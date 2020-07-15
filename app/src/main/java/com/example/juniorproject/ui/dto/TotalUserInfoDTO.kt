@@ -14,5 +14,5 @@ data class TotalUserInfoDTO (
     val error: String? = "",
     val estimated_data: String? = "",
     val original_data: String? = "",
-    val reliability: String? = "'"
+    val reliability: String? = ""
 )

@@ -9,6 +9,9 @@
         <variable
             name="activity"
             type="com.example.juniorproject.ui.MainActivity" />
+<!--        <variable-->
+<!--            name="vm"-->
+<!--            type="com.example.juniorproject.ui.viewmodel.MainViewModel" />-->
     </data>
 
     <LinearLayout
@@ -16,6 +19,20 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:context=".ui.MainActivity">
+
+        <Button
+            android:id="@+id/btnMvvmTest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MVVM TEST"
+            android:onClick="@{() -> activity.startMvvmTest()}" />
+
+        <Button
+            android:id="@+id/btnMvvmFrag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MVVM FRAGMENT"
+            android:onClick="@{() -> activity.startMvvmFrag()}" />
 
         <Button
             android:id="@+id/btnServer"

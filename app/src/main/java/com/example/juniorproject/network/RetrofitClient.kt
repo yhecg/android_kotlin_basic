@@ -11,6 +11,7 @@ import retrofit2.Response
 /**
  * Retrofit 통신 api 모음
  */
+//class RetrofitClient private constructor(){
 class RetrofitClient {
 
     companion object{
@@ -18,6 +19,7 @@ class RetrofitClient {
         private val TAG = RetrofitClient::class.java.simpleName
 
         private var instance: RetrofitClient? = null
+//        @Volatile private var instance: RetrofitClient? = null
 
         @Synchronized
         @JvmStatic

@@ -1,4 +1,4 @@
-package com.example.juniorproject.db.realm.module
+package com.example.juniorproject.db.realm.model
 
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
