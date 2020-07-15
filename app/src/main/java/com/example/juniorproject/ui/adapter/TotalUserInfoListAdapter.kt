@@ -56,7 +56,7 @@ class TotalUserInfoListAdapter(private val context : Context) :
         }
     }
 
-    class diffCallback:DiffUtil.ItemCallback<RealmTotalUserInfoModel>(){
+    class DiffCallback:DiffUtil.ItemCallback<RealmTotalUserInfoModel>(){
         override fun areItemsTheSame(
             oldItem: RealmTotalUserInfoModel,
             newItem: RealmTotalUserInfoModel
