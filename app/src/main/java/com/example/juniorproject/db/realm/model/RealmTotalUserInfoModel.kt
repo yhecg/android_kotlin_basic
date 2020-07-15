@@ -1,5 +1,6 @@
 package com.example.juniorproject.db.realm.model
 
+import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass

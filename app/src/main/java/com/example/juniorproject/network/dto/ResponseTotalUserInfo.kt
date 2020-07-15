@@ -6,14 +6,14 @@ package com.example.juniorproject.network.dto
 
 // 전체 데이터
 data class ResponseTotalUserInfo (
-    val info:ArrayList<ResponseCommonData>
+    val info:MutableList<ResponseCommonData>
 )
 
 // 공통으로 사용되는 부분
 open class ResponseCommonData (
-    val type: ArrayList<String>,
-    val error: ArrayList<String>,
-    val estimated_data: ArrayList<String>,
-    val original_data: ArrayList<String>,
-    val reliability: ArrayList<String>
+    val type: String,
+    val error: MutableList<String>,
+    val estimated_data: MutableList<String>,
+    val original_data: MutableList<String>,
+    val reliability: MutableList<String>
 )

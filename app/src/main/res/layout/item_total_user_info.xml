@@ -4,19 +4,43 @@
     <data>
         <variable
             name="info"
-            type="com.example.juniorproject.ui.dto.TotalUserInfoDTO" />
+            type="com.example.juniorproject.db.realm.model.RealmTotalUserInfoModel" />
     </data>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tvType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{info.type}"
-            android:layout_centerInParent="true" />
+            android:text="@{info.type}" />
 
-    </RelativeLayout>
+        <TextView
+            android:id="@+id/tvError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{info.error}" />
+
+        <TextView
+            android:id="@+id/tvEst"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{info.estimated_data}" />
+
+        <TextView
+            android:id="@+id/tvOri"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{info.original_data}"/>
+
+        <TextView
+            android:id="@+id/tvRel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{info.reliability}"/>
+
+    </LinearLayout>
 </layout>

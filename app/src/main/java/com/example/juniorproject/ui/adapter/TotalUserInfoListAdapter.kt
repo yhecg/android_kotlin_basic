@@ -1,12 +1,15 @@
 package com.example.juniorproject.ui.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.juniorproject.databinding.ItemTotalUserInfoBinding
-import com.example.juniorproject.ui.dto.TotalUserInfoDTO
+import com.example.juniorproject.db.realm.model.RealmTotalUserInfoModel
 
 /**
  * 메인화면에서 유저 전체 관련 정보를 보여줄 리스트뷰 어댑터
@@ -15,13 +18,14 @@ class TotalUserInfoListAdapter(private val context : Context) :
     RecyclerView.Adapter<TotalUserInfoListAdapter.VHolder>() {
 
     class VHolder(private val binding:ItemTotalUserInfoBinding):RecyclerView.ViewHolder(binding.root){
-        fun onBind(data:TotalUserInfoDTO){
+        fun onBind(data:RealmTotalUserInfoModel){
             binding.info = data
             binding.executePendingBindings()
         }
     }
 
-    var list = mutableListOf<TotalUserInfoDTO>()
+//    var list = MutableLiveData(mutableListOf<RealmTotalUserInfoModel>())
+    var list = mutableListOf<RealmTotalUserInfoModel>()
 
     // 클릭 인터페이스 정의
     interface ItemClickListener{
@@ -50,6 +54,24 @@ class TotalUserInfoListAdapter(private val context : Context) :
         holder.itemView.setOnClickListener{
             itemClickListener.onClick(it, position)
         }
+    }
+
+    class diffCallback:DiffUtil.ItemCallback<RealmTotalUserInfoModel>(){
+        override fun areItemsTheSame(
+            oldItem: RealmTotalUserInfoModel,
+            newItem: RealmTotalUserInfoModel
+        ): Boolean {
+            return oldItem.type == newItem.type
+        }
+
+        @SuppressLint("DiffUtilEquals")
+        override fun areContentsTheSame(
+            oldItem: RealmTotalUserInfoModel,
+            newItem: RealmTotalUserInfoModel
+        ): Boolean {
+            return oldItem == newItem
+        }
+
     }
 
 

@@ -2,26 +2,26 @@ package com.example.juniorproject.network
 
 import android.os.Handler
 import android.os.Message
+import com.example.juniorproject.common.Constant
 import com.example.juniorproject.network.dto.ResponseTotalUserInfo
 import com.example.juniorproject.util.LogUtil
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 /**
  * Retrofit 통신 api 모음
  */
-//class RetrofitClient private constructor(){
-class RetrofitClient {
+class RetrofitClient private constructor(){
 
     companion object{
 
         private val TAG = RetrofitClient::class.java.simpleName
 
-        private var instance: RetrofitClient? = null
-//        @Volatile private var instance: RetrofitClient? = null
+        @Volatile private var instance: RetrofitClient? = null
 
-        @Synchronized
         @JvmStatic
         fun getInstance(): RetrofitClient? {
             try{
@@ -37,10 +37,19 @@ class RetrofitClient {
 
     }
 
+    private fun getInterface(serverUrl:String) : RetrofitInterface{
+        return Retrofit.Builder()
+            .baseUrl(serverUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(RetrofitInterface::class.java)
+    }
+
+
     // 전체 유저의 정보
     fun requestTotalUserInfo(handler:Handler){
         try{
-            RetrofitManager.getInstance()?.getServerData()?.enqueue(object :
+            getInterface(Constant.SERVER_URL).getServerData().enqueue(object :
                 Callback<ResponseTotalUserInfo> {
                 override fun onFailure(call: Call<ResponseTotalUserInfo>, t: Throwable) {
                     LogUtil.e(TAG, "통신 실패 : $t")

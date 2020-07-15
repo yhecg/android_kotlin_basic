@@ -7,7 +7,9 @@ import android.os.Handler
 import android.os.Message
 import android.view.View
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.juniorproject.R
 import com.example.juniorproject.databinding.ActivityMainBinding
@@ -19,13 +21,10 @@ import com.example.juniorproject.network.RetrofitApiId
 import com.example.juniorproject.network.RetrofitClient
 import com.example.juniorproject.network.dto.ResponseCommonData
 import com.example.juniorproject.ui.adapter.TotalUserInfoListAdapter
-import com.example.juniorproject.ui.dto.TotalUserInfoDTO
 import com.example.juniorproject.ui.viewmodel.MainViewModel
 import com.example.juniorproject.util.LogUtil
-import com.google.gson.GsonBuilder
 import io.realm.Realm
 import io.realm.RealmResults
-import org.json.JSONObject
 import kotlin.Exception
 
 /**
@@ -46,23 +45,13 @@ class MainActivity : BaseActivity() {
 
         realmInit()
         dataBindingInit()
-//        rvInit()
+        setListView()
 
     }
 
     override fun onDestroy() {
         super.onDestroy()
         mRealm.close() // realm 닫기 - 메모리 Leak 방지
-    }
-
-    fun startMvvmFrag(){
-        val intent:Intent = Intent(this, VmSharedActivity::class.java)
-        startActivity(intent)
-    }
-
-    fun startMvvmTest(){
-        val intent:Intent = Intent(this, TestActivity::class.java)
-        startActivity(intent)
     }
 
     // 리스트뷰 어댑터 설정
@@ -72,7 +61,7 @@ class MainActivity : BaseActivity() {
                 try{
                     setRealmDataUpdate(position)
                 }catch (e:Exception){
-                    LogUtil.e(TAG, e.toString())
+                    LogUtil.e(TAG, "리스트뷰 어댑터 설정 오류 : $e")
                 }
             }
         })
@@ -83,13 +72,27 @@ class MainActivity : BaseActivity() {
         try {
             viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
             binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main).apply {
-//                lifecycleOwner = this@MainActivity
-//                vm = viewModel
+                lifecycleOwner = this@MainActivity
+                vm = this@MainActivity.viewModel
+                act = this@MainActivity
 
-                activity = this@MainActivity
                 rvTotalUserInfoList.layoutManager = LinearLayoutManager(this@MainActivity)
+                rvTotalUserInfoList.addItemDecoration(DividerItemDecoration(this@MainActivity, LinearLayoutManager.VERTICAL))
                 rvTotalUserInfoList.adapter = adapter
+
             }
+            viewModel.showAct.observe(this, Observer {
+                when (it) {
+                    1 -> {
+                        val intent = Intent(this, TestActivity::class.java)
+                        startActivity(intent)
+                    }2 -> {
+                        val intent = Intent(this, VmSharedActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
+            })
+
         } catch (e:Exception){
             LogUtil.e(TAG, "데이터바인딩 초기화 오류 : $e")
         }
@@ -109,21 +112,9 @@ class MainActivity : BaseActivity() {
     private fun setListView() {
         try {
             val dbResult = getRealmData()
-            val dbResultSize:Int = dbResult!!.size
             adapter.list.clear()
-            if(dbResultSize != 0) {
-                for (i in 0 until dbResultSize) {
-                    val dto = TotalUserInfoDTO(dbResult[i].idx,
-                        (dbResult[i].type), dbResult[i].error, dbResult[i].estimated_data,
-                        dbResult[i].original_data, dbResult[i].reliability
-                    )
-                    adapter.list.add(dto)
-                }
-                adapter.notifyDataSetChanged()
-//                binding.rvTotalUserInfoList.scrollToPosition(dbResultSize - 1)
-            }else{
-                adapter.notifyDataSetChanged()
-            }
+            adapter.list.addAll(dbResult!!)
+            adapter.notifyDataSetChanged()
         } catch (e: Exception) {
             LogUtil.e(TAG, "리스트뷰 데이터 처리 오류 : $e")
         }
@@ -166,13 +157,9 @@ class MainActivity : BaseActivity() {
             mRealm.beginTransaction()
             val result:RealmResults<RealmTotalUserInfoModel> =
                 mRealm.where(RealmTotalUserInfoModel::class.java).findAll()
-            LogUtil.d(TAG, "realm 데이터 json : " + result.asJSON())
-
-            // RealmResults 객체 -> 리스트로 변환
             val dbList: MutableList<RealmTotalUserInfoModel>? = mRealm.copyFromRealm(result)
-
             mRealm.commitTransaction()
-
+            LogUtil.d(TAG, "realm 데이터 json : " + result.asJSON())
             return dbList
         }catch (e:Exception){
             LogUtil.e(TAG, "realm data 가져오기 오류 : $e")
@@ -180,55 +167,35 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    // Realm PrimaryKey Index 구하기
+    private fun getPrimaryKeyIndex():Int{
+        mRealm.beginTransaction()
+        val idx = mRealm.where(RealmTotalUserInfoModel::class.java).max("idx")
+        val nextId = if(idx == null){
+            1
+        }else{
+            idx.toInt()+1
+        }
+        mRealm.commitTransaction()
+        return nextId
+    }
+
     // 서버에서 받은 데이터를 저장
-    private fun setRealmDataSave(infoList:ArrayList<ResponseCommonData>, count:Int){
+    private fun setRealmDataSave(infoList:MutableList<ResponseCommonData>){
         try{
-            if(count < infoList.size){
-                val info: ResponseCommonData = infoList[count]
-                val gson = GsonBuilder().create()
-                val infoStr = gson.toJson(info)
-                val infoJson:JSONObject = JSONObject(infoStr)
-                val keys:Iterator<String> = infoJson.keys()
-
-                // DB realm 작업 시작
+            for(i in 0 until infoList.size){
+                val count = getPrimaryKeyIndex()
                 mRealm.beginTransaction()
-                val idx = mRealm.where(RealmTotalUserInfoModel::class.java).max("idx")
-                val nextId = if(idx == null){
-                    1
-                }else{
-                    idx.toInt()+1
-                }
                 val model: RealmTotalUserInfoModel = mRealm.createObject(
-                    RealmTotalUserInfoModel::class.java, nextId)
-
-                while(keys.hasNext()){
-                    val key:String = keys.next()
-
-                    val sb:StringBuilder = StringBuilder()
-                    val jsonSize:Int = infoJson.getJSONArray(key).length()
-                    for(i in 0 until jsonSize){
-                        if(i != 0){
-                            sb.append(",")
-                        }
-                        sb.append(infoJson.getJSONArray(key)[i])
-                    }
-                    LogUtil.d(TAG, " [ key : $key ] - [ value : $sb ]")
-                    when(key){
-                        "type" -> model.type = sb.toString()
-                        "error" -> model.error = sb.toString()
-                        "estimated_data" -> model.estimated_data = sb.toString()
-                        "original_data" -> model.original_data = sb.toString()
-                        "reliability" -> model.reliability = sb.toString()
-                    }
-                }
-                // DB realm 작업 종료
+                    RealmTotalUserInfoModel::class.java, count)
+                model.type = infoList[i].type
+                model.error = infoList[i].error.toString()
+                model.estimated_data = infoList[i].estimated_data.toString()
+                model.original_data = infoList[i].original_data.toString()
+                model.reliability = infoList[i].reliability.toString()
                 mRealm.commitTransaction()
-
-                setRealmDataSave(infoList, count+1)
-            }else{
-                // 저장이 다 되었으면 데이터를 리스트뷰에 뿌려준다
-                setListView()
             }
+            setListView()
         }catch (e:Exception){
             LogUtil.e(TAG, "서버에서 받은 데이터 변환 오류 : $e")
         }
@@ -250,7 +217,8 @@ class MainActivity : BaseActivity() {
             super.handleMessage(msg)
             if(msg.what == RetrofitApiId.RESPONSE_TOTAL_USER_INFO){
                 try {
-                    setRealmDataSave(msg.obj as ArrayList<ResponseCommonData>, 0)
+                    setRealmDataSave(msg.obj as MutableList<ResponseCommonData>)
+//                    setRealmDataSave(msg.obj as ArrayList<ResponseCommonData>, 0)
                 }catch (e:Exception){
                     LogUtil.e(TAG, "통신 데이터 Response 핸들러 오류 : $e")
                 }
