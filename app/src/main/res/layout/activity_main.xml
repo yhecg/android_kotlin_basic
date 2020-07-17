@@ -7,7 +7,7 @@
 
     <data>
         <variable
-            name="vm"
+            name="model"
             type="com.example.juniorproject.ui.viewmodel.MainViewModel" />
         <variable
             name="act"
@@ -32,92 +32,57 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="MVVM TEST"
-            android:onClick="@{() -> vm.callShowActivity(1)}" />
+            android:onClick="@{() -> model.callShowActivity(1)}" />
 
         <Button
             android:id="@+id/btnMvvmFrag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="MVVM FRAGMENT"
-            android:onClick="@{() -> vm.callShowActivity(2)}" />
+            android:onClick="@{() -> model.callShowActivity(2)}" />
+
+        <Button
+            android:id="@+id/btnListAdd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LiveData Test"
+            android:onClick="@{() -> model.setListAdd()}" />
+
+        <Button
+            android:id="@+id/btnCoroutineTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="코루틴 Test"
+            android:onClick="@{() -> model.coroutineTest()}" />
 
         <Button
             android:id="@+id/btnServer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/btn_server"
-            android:onClick="@{() -> act.getServerData()}" />
+            android:onClick="@{() -> model.getServerData()}" />
 
         <Button
             android:id="@+id/btnRealmSelect"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/btn_realm_select"
-            android:onClick="@{() -> act.getRealmData()}" />
+            android:onClick="@{() -> model.setListView()}" />
 
         <Button
             android:id="@+id/btnRealmDelete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/btn_realm_delete"
-            android:onClick="@{() -> act.setRealmDataDelete()}" />
+            android:onClick="@{() -> model.setRealmDataDelete()}" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvTotalUserInfoList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            bindInit="@{model.items}"/>
 
     </LinearLayout>
 
 </layout>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--<LinearLayout-->
-<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--    xmlns:tools="http://schemas.android.com/tools"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="match_parent"-->
-<!--    android:orientation="vertical"-->
-<!--    tools:context=".ui.MainActivity">-->
-
-<!--    <Button-->
-<!--        android:id="@+id/btnServer"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="@string/btn_server" />-->
-
-<!--    <Button-->
-<!--        android:id="@+id/btnRealmSelect"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="@string/btn_realm_select" />-->
-
-<!--    <Button-->
-<!--        android:id="@+id/btnRealmDelete"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="@string/btn_realm_delete" />-->
-
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/ççç"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"/>-->
-
-<!--</LinearLayout>-->
-
 

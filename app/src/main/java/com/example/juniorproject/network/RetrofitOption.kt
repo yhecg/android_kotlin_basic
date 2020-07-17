@@ -14,19 +14,19 @@ import retrofit2.converter.gson.GsonConverterFactory
 /**
  * Retrofit 통신 api 모음
  */
-class RetrofitClient private constructor(){
+class RetrofitOption private constructor(){
 
     companion object{
 
-        private val TAG = RetrofitClient::class.java.simpleName
+        private val TAG = RetrofitOption::class.java.simpleName
 
-        @Volatile private var instance: RetrofitClient? = null
+        @Volatile private var instance: RetrofitOption? = null
 
         @JvmStatic
-        fun getInstance(): RetrofitClient? {
+        fun getInstance(): RetrofitOption? {
             try{
                 if(instance == null) {
-                    instance = RetrofitClient()
+                    instance = RetrofitOption()
                     LogUtil.d(TAG, "RetrofitClient Instance 생성")
                 }
             } catch (e:Exception){
@@ -44,7 +44,6 @@ class RetrofitClient private constructor(){
             .build()
             .create(RetrofitInterface::class.java)
     }
-
 
     // 전체 유저의 정보
     fun requestTotalUserInfo(handler:Handler){

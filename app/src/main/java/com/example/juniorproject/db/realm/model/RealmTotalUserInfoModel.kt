@@ -15,4 +15,5 @@ open class RealmTotalUserInfoModel : RealmObject() {
     var original_data: String? = ""
     var reliability: String? = ""
 
+
 }

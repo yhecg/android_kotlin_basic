@@ -2,7 +2,7 @@
     <string name="app_name">JuniorProject</string>
 
     <!-- 리스트 화면 ListActivity -->
-    <string name="btn_server">서버에서 정보 받아오기</string>
+    <string name="btn_server">서버에서 데이터 받아 Realm에 저장</string>
     <string name="btn_realm_select">Realm Select</string>
     <string name="btn_realm_delete">Realm Delete</string>
 

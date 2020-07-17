@@ -87,4 +87,6 @@ dependencies {
     // realm adapter
     implementation 'io.realm:android-adapters:2.0.0'
 
+    implementation "io.reactivex.rxjava3:rxjava:3.0.0"
+
 }
