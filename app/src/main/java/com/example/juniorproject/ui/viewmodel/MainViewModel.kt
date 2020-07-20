@@ -6,19 +6,15 @@ import android.os.Message
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.juniorproject.db.realm.RealmDao
-import com.example.juniorproject.db.realm.RealmLiveData
 import com.example.juniorproject.db.realm.RealmOption
 import com.example.juniorproject.db.realm.RealmRepo
 import com.example.juniorproject.db.realm.model.RealmTotalUserInfoModel
-import com.example.juniorproject.db.realm.model.TotalUserInfoDao
+import com.example.juniorproject.db.realm.RealmDao
 import com.example.juniorproject.network.RetrofitApiId
 import com.example.juniorproject.network.RetrofitOption
 import com.example.juniorproject.network.dto.ResponseCommonData
 import com.example.juniorproject.util.LogUtil
-import io.realm.Realm
-import io.realm.RealmModel
-import io.realm.RealmResults
+import io.realm.*
 import kotlinx.coroutines.*
 
 /**
@@ -37,56 +33,29 @@ class MainViewModel : ViewModel() {
         showAct.value = type
     }
 
-    val _items = MutableLiveData<ArrayList<RealmTotalUserInfoModel>>(arrayListOf())
-    val items: LiveData<ArrayList<RealmTotalUserInfoModel>>
-        get() = _items
-
-    // Test
-    fun setListAdd(){
-        val dto = RealmTotalUserInfoModel()
-        dto.idx = 1
-        dto.type = "type"
-        dto.error = "error"
-        dto.estimated_data = "est"
-        dto.original_data = "ori"
-        dto.reliability = "rel"
-
-        val list = _items.value ?: arrayListOf()
-        list.add(dto)
-        _items.value = list
-
-    }
-
-
-    fun coroutineTest(){
-        runBlocking {
-            LogUtil.d(TAG, "start")
-
-            var a = CoroutineScope(Dispatchers.IO).async {
-                LogUtil.d(TAG, "111 첫번째 스코프 시작")
-                for(item in 0..10){
-                    LogUtil.d(TAG, "111 첫번째 스코프 : $item")
-                }
-            }
-
-            CoroutineScope(Dispatchers.IO).launch {
-                LogUtil.d(TAG, "222 두번째 스코프 시작")
-                for(item in 0..10){
-                    LogUtil.d(TAG, "222 두번째 스코프 : $item")
-                }
-            }
-
-            a.await()
-
-        }
-    }
-
     var mRealm = RealmOption.getInstance()!!
+
+    var dao = RealmDao(mRealm)
+    fun getDataObserved(): LiveData<RealmResults<RealmTotalUserInfoModel>>{
+        return dao.getDataObserved()
+    }
+
+//    val _items = MutableLiveData<ArrayList<RealmTotalUserInfoModel>>(arrayListOf())
+//    val items: LiveData<ArrayList<RealmTotalUserInfoModel>>
+//        get() = _items
 
     override fun onCleared() {
         LogUtil.d(TAG, "onCleared")
         mRealm.close()
         super.onCleared()
+    }
+
+    // 코루틴 서버 데이터 받기
+    fun coroutineServerData(){
+        runBlocking {
+            val result = RetrofitOption.getInstance()?.requestTotalUserInfoCo()?.await()
+            RealmRepo.setInsert(mRealm, result?.info as ArrayList<ResponseCommonData>)
+        }
     }
 
     // 서버에서 데이터 받기
@@ -114,34 +83,27 @@ class MainViewModel : ViewModel() {
     }
 
     // 저장된 데이터 불러와서 리스트뷰 연결
-    fun setListView() {
-        try {
-            val dbResult = RealmRepo.getRead(mRealm)
-            _items.value?.clear()
-//            val list = _items.value ?: arrayListOf()
-//            list.addAll(dbResult!!)
-            val list = _items.value
-            list?.addAll(dbResult!!)
-            _items.value = list
-        } catch (e: Exception) {
-            LogUtil.e(TAG, "리스트뷰 데이터 처리 오류 : $e")
-        }
-    }
+//    fun setListView() {
+//        try {
+//            val dbResult = RealmRepo.getRead(mRealm)
+//            _items.value?.clear()
+//            val list = _items.value
+//            list?.addAll(dbResult!!)
+//            _items.value = list
+//        } catch (e: Exception) {
+//            LogUtil.e(TAG, "리스트뷰 데이터 처리 오류 : $e")
+//        }
+//    }
 
     // realm 데이터 삭제
     fun setRealmDataDelete(){
         try {
             RealmRepo.setDelete(mRealm)
-            setListView()
+//            setListView()
         }catch (e:Exception){
             LogUtil.e(TAG, "realm 데이터 삭제 오류 : $e")
         }
     }
-
-
-
-
-
 
 
 

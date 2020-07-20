@@ -10,11 +10,10 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.juniorproject.R
 import com.example.juniorproject.databinding.ActivityMainBinding
-import com.example.juniorproject.db.realm.RealmOption
 import com.example.juniorproject.db.realm.RealmRepo
 import com.example.juniorproject.example.mvvm_fragment.VmSharedActivity
 import com.example.juniorproject.example.mvvm_activity.TestActivity
-import com.example.juniorproject.ui.adapter.TotalUserInfoListAdapter
+import com.example.juniorproject.ui.adapter.RealmRVAdapter
 import com.example.juniorproject.ui.viewmodel.MainViewModel
 import com.example.juniorproject.util.LogUtil
 import io.realm.Realm
@@ -39,21 +38,6 @@ class MainActivity : BaseActivity() {
 
     }
 
-    // 리스트뷰 어댑터 설정
-    private var adapter = TotalUserInfoListAdapter().apply {
-        setItemClickListener(object:TotalUserInfoListAdapter.ItemClickListener{
-            override fun onClick(view: View, position: Int) {
-                try{
-                    val index = binding.model?._items?.value?.get(position)?.idx
-                    RealmRepo.setUpdate(viewModel.mRealm, index!!)
-                    binding.model?.setListView()
-                }catch (e:Exception){
-                    LogUtil.e(TAG, "리스트뷰 어댑터 설정 오류 : $e")
-                }
-            }
-        })
-    }
-
     // dataBinding 설정
     private fun dataBindingInit(){
         try {
@@ -65,9 +49,11 @@ class MainActivity : BaseActivity() {
 
                 rvTotalUserInfoList.layoutManager = LinearLayoutManager(this@MainActivity)
                 rvTotalUserInfoList.addItemDecoration(DividerItemDecoration(this@MainActivity, LinearLayoutManager.VERTICAL))
-                rvTotalUserInfoList.adapter = adapter
+//                rvTotalUserInfoList.adapter = adapter
 
             }
+            binding.rvTotalUserInfoList.adapter = adapters
+
             viewModel.showAct.observe(this, Observer {
                 when (it) {
                     1 -> {
@@ -80,10 +66,56 @@ class MainActivity : BaseActivity() {
                 }
             })
 
+//            viewModel.mRealm.addChangeListener(viewModel.realmListener)
+//            viewModel.results = viewModel.mRealm.where(RealmTotalUserInfoModel::class.java).findAll()
+//            viewModel.check.observe(this, Observer {
+//                adapters.notifyDataSetChanged()
+//            })
+
+            viewModel.getDataObserved().observe(this, Observer {
+                it?.let {
+                    adapters.result = it
+                    adapters.notifyDataSetChanged()
+                }
+            })
+
+            (binding.rvTotalUserInfoList.adapter as RealmRVAdapter).result = RealmRepo.getRead(viewModel.mRealm)
+
         } catch (e:Exception){
             LogUtil.e(TAG, "데이터바인딩 초기화 오류 : $e")
         }
     }
+
+    // 리스트뷰 어댑터 설정
+    private var adapters = RealmRVAdapter(
+        results = null, autoUpdate = true
+    ).apply {
+        setItemClickListener(object:RealmRVAdapter.ItemClickListener{
+            override fun onClick(view: View, position: Int) {
+                try{
+                    val result = RealmRepo.getRead(viewModel.mRealm)?.get(position)
+                    RealmRepo.setUpdate(viewModel.mRealm, result?.idx)
+                }catch (e:Exception){
+                    LogUtil.e(TAG, "리스트뷰 어댑터 설정 오류 : $e")
+                }
+            }
+        })
+    }
+
+    // 리스트뷰 어댑터 설정
+//    private var adapter = TotalUserInfoListAdapter().apply {
+//        setItemClickListener(object:TotalUserInfoListAdapter.ItemClickListener{
+//            override fun onClick(view: View, position: Int) {
+//                try{
+//                    val index = binding.model?._items?.value?.get(position)?.idx
+//                    RealmRepo.setUpdate(viewModel.mRealm, index!!)
+//                    binding.model?.setListView()
+//                }catch (e:Exception){
+//                    LogUtil.e(TAG, "리스트뷰 어댑터 설정 오류 : $e")
+//                }
+//            }
+//        })
+//    }
 
 
 }

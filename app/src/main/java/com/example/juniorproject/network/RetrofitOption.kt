@@ -3,13 +3,17 @@ package com.example.juniorproject.network
 import android.os.Handler
 import android.os.Message
 import com.example.juniorproject.common.Constant
+import com.example.juniorproject.db.realm.model.RealmTotalUserInfoModel
 import com.example.juniorproject.network.dto.ResponseTotalUserInfo
 import com.example.juniorproject.util.LogUtil
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import kotlinx.coroutines.Deferred
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 
 /**
  * Retrofit 통신 api 모음
@@ -41,8 +45,16 @@ class RetrofitOption private constructor(){
         return Retrofit.Builder()
             .baseUrl(serverUrl)
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(CoroutineCallAdapterFactory()) // 코루틴
             .build()
             .create(RetrofitInterface::class.java)
+    }
+
+//    fun requestTotalUserInfoCo(): ResponseTotalUserInfo {
+//        return getInterface(Constant.SERVER_URL).getDeferredServerData()
+//    }
+    fun requestTotalUserInfoCo(): Deferred<ResponseTotalUserInfo> {
+        return getInterface(Constant.SERVER_URL).getDeferredServerData()
     }
 
     // 전체 유저의 정보
@@ -71,6 +83,18 @@ class RetrofitOption private constructor(){
         }
     }
 
-
-
 }
+
+//class ListManager(private val api : RetrofitOption=RetrofitOption()){
+//
+//    suspend fun getInfoList(param : Map<String, String>) : Observable<RealmTotalUserInfoModel>{
+//        val result = api.requestTotalUserInfoCo(param)
+//        return process(param)
+//    }
+//
+//    private fun process(response: Map<String, String>) : RealmTotalUserInfoModel {
+//        val list = response
+//        return
+//    }
+//
+//}

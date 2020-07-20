@@ -4,6 +4,7 @@ import com.example.juniorproject.db.realm.model.RealmTotalUserInfoModel
 import com.example.juniorproject.network.dto.ResponseCommonData
 import com.example.juniorproject.util.LogUtil
 import io.realm.Realm
+import io.realm.RealmModel
 import io.realm.RealmResults
 
 object RealmRepo {
@@ -21,13 +22,18 @@ object RealmRepo {
     }
 
     // 데이터 보기
-    fun getRead(realm:Realm): MutableList<RealmTotalUserInfoModel>? {
-        val result: RealmResults<RealmTotalUserInfoModel> =
-            realm.where(RealmTotalUserInfoModel::class.java)!!.findAll()
-        val dbList: MutableList<RealmTotalUserInfoModel>? = realm.copyFromRealm(result)
-        LogUtil.d(TAG, "realm 데이터 json : " + result.asJSON())
-        return dbList
+    fun getRead(realm:Realm): RealmResults<RealmTotalUserInfoModel>? {
+        return realm.where(RealmTotalUserInfoModel::class.java)!!.findAll()
     }
+
+//    // 데이터 보기
+//    fun getRead(realm:Realm): MutableList<RealmTotalUserInfoModel>? {
+//        val result: RealmResults<RealmTotalUserInfoModel> =
+//            realm.where(RealmTotalUserInfoModel::class.java)!!.findAll()
+//        val dbList: MutableList<RealmTotalUserInfoModel>? = realm.copyFromRealm(result)
+//        LogUtil.d(TAG, "realm 데이터 json : " + result.asJSON())
+//        return dbList
+//    }
 
     // 데이터 등록
     fun setInsert(realm: Realm, infoList:ArrayList<ResponseCommonData>) {
@@ -55,7 +61,7 @@ object RealmRepo {
     }
 
     // 데이터 수정
-    fun setUpdate(realm:Realm, index:Int){
+    fun setUpdate(realm:Realm, index: Int?){
         realm.beginTransaction()
         val result: RealmTotalUserInfoModel? =
             realm.where(RealmTotalUserInfoModel::class.java)?.equalTo("idx", index)?.findFirst()
