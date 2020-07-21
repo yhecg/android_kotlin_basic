@@ -9,9 +9,6 @@
         <variable
             name="model"
             type="com.example.juniorproject.ui.viewmodel.MainViewModel" />
-<!--        <variable-->
-<!--            name="act"-->
-<!--            type="com.example.juniorproject.ui.MainActivity" />-->
     </data>
 
     <LinearLayout
@@ -20,47 +17,12 @@
         android:orientation="vertical"
         tools:context=".ui.MainActivity">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-        </LinearLayout>
-
-<!--        <Button-->
-<!--            android:id="@+id/btnMvvmTest"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="MVVM TEST"-->
-<!--            android:onClick="@{() -> model.callShowActivity(1)}" />-->
-
-<!--        <Button-->
-<!--            android:id="@+id/btnMvvmFrag"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="MVVM FRAGMENT"-->
-<!--            android:onClick="@{() -> model.callShowActivity(2)}" />-->
-
-<!--        <Button-->
-<!--            android:id="@+id/btnServer"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/btn_server"-->
-<!--            android:onClick="@{() -> model.getServerData()}" />-->
-
         <Button
             android:id="@+id/btnCoroutineServer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/btn_coroutine_server"
             android:onClick="@{() -> model.coroutineServerData()}" />
-
-<!--        <Button-->
-<!--            android:id="@+id/btnRealmSelect"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/btn_realm_select"-->
-<!--            android:onClick="@{() -> model.setListView()}" />-->
 
         <Button
             android:id="@+id/btnRealmDelete"
@@ -69,16 +31,44 @@
             android:text="@string/btn_realm_delete"
             android:onClick="@{() -> model.setRealmDataDelete()}" />
 
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:id="@+id/rvTotalUserInfoList"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            bindInit="@{model.items}"/>-->
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvTotalUserInfoList"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+        <!--        <androidx.recyclerview.widget.RecyclerView-->
+        <!--            android:id="@+id/rvTotalUserInfoList"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            bindInit="@{model.items}"/>-->
+
+        <!--        <Button-->
+        <!--            android:id="@+id/btnMvvmTest"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="MVVM TEST"-->
+        <!--            android:onClick="@{() -> model.callShowActivity(1)}" />-->
+
+        <!--        <Button-->
+        <!--            android:id="@+id/btnMvvmFrag"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="MVVM FRAGMENT"-->
+        <!--            android:onClick="@{() -> model.callShowActivity(2)}" />-->
+
+        <!--        <Button-->
+        <!--            android:id="@+id/btnServer"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="@string/btn_server"-->
+        <!--            android:onClick="@{() -> model.getServerData()}" />-->
+
+        <!--        <Button-->
+        <!--            android:id="@+id/btnRealmSelect"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="@string/btn_realm_select"-->
+        <!--            android:onClick="@{() -> model.setListView()}" />-->
 
     </LinearLayout>
 

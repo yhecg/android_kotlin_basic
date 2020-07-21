@@ -19,8 +19,8 @@ class RealmLiveData<T:RealmModel>(val realmResults: RealmResults<T>) : LiveData<
         value = it
     }
 
-    override fun onActive() = realmResults.addChangeListener(listener)
+    override fun onActive() = realmResults.addChangeListener(listener) // 데이터 동기화
 
-    override fun onInactive() = realmResults.removeChangeListener(listener)
+    override fun onInactive() = realmResults.removeChangeListener(listener) // 초기화
 
 }

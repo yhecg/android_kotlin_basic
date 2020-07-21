@@ -18,7 +18,7 @@ interface RetrofitInterface {
 
     // @return Deferred<T> 코루틴의 지연된 콜백 인터페이스 반환, T 는 주고 받을 데이터 구조
     @POST("/main/getData")
-//    fun getDeferredServerData() : ResponseTotalUserInfo
     fun getDeferredServerData() : Deferred<ResponseTotalUserInfo>
+//    fun getDeferredServerData() : ResponseTotalUserInfo
 
 }

@@ -13,10 +13,12 @@ import com.example.juniorproject.databinding.ActivityMainBinding
 import com.example.juniorproject.db.realm.RealmRepo
 import com.example.juniorproject.example.mvvm_fragment.VmSharedActivity
 import com.example.juniorproject.example.mvvm_activity.TestActivity
+import com.example.juniorproject.ui.adapter.RealmListAdapter
 import com.example.juniorproject.ui.adapter.RealmRVAdapter
 import com.example.juniorproject.ui.viewmodel.MainViewModel
 import com.example.juniorproject.util.LogUtil
 import io.realm.Realm
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.Exception
 
 /**
@@ -49,22 +51,19 @@ class MainActivity : BaseActivity() {
 
                 rvTotalUserInfoList.layoutManager = LinearLayoutManager(this@MainActivity)
                 rvTotalUserInfoList.addItemDecoration(DividerItemDecoration(this@MainActivity, LinearLayoutManager.VERTICAL))
-//                rvTotalUserInfoList.adapter = adapter
 
             }
-            binding.rvTotalUserInfoList.adapter = adapters
+            binding.rvTotalUserInfoList.adapter = adapter
 
-            viewModel.showAct.observe(this, Observer {
-                when (it) {
-                    1 -> {
-                        val intent = Intent(this, TestActivity::class.java)
-                        startActivity(intent)
-                    }2 -> {
-                        val intent = Intent(this, VmSharedActivity::class.java)
-                        startActivity(intent)
-                    }
+            viewModel.getDataObserved().observe(this, Observer {
+                it?.let {
+                    adapter.result = it
+                    adapter.notifyDataSetChanged()
+                    rvTotalUserInfoList.smoothScrollToPosition(adapter.itemCount-1)
                 }
             })
+
+            (binding.rvTotalUserInfoList.adapter as RealmListAdapter).result = RealmRepo.getRead(viewModel.mRealm)
 
 //            viewModel.mRealm.addChangeListener(viewModel.realmListener)
 //            viewModel.results = viewModel.mRealm.where(RealmTotalUserInfoModel::class.java).findAll()
@@ -72,14 +71,17 @@ class MainActivity : BaseActivity() {
 //                adapters.notifyDataSetChanged()
 //            })
 
-            viewModel.getDataObserved().observe(this, Observer {
-                it?.let {
-                    adapters.result = it
-                    adapters.notifyDataSetChanged()
-                }
-            })
-
-            (binding.rvTotalUserInfoList.adapter as RealmRVAdapter).result = RealmRepo.getRead(viewModel.mRealm)
+//            viewModel.showAct.observe(this, Observer {
+//                when (it) {
+//                    1 -> {
+//                        val intent = Intent(this, TestActivity::class.java)
+//                        startActivity(intent)
+//                    }2 -> {
+//                    val intent = Intent(this, VmSharedActivity::class.java)
+//                    startActivity(intent)
+//                }
+//                }
+//            })
 
         } catch (e:Exception){
             LogUtil.e(TAG, "데이터바인딩 초기화 오류 : $e")
@@ -87,10 +89,8 @@ class MainActivity : BaseActivity() {
     }
 
     // 리스트뷰 어댑터 설정
-    private var adapters = RealmRVAdapter(
-        results = null, autoUpdate = true
-    ).apply {
-        setItemClickListener(object:RealmRVAdapter.ItemClickListener{
+    private var adapter = RealmListAdapter().apply {
+        setItemClickListener(object:RealmListAdapter.ItemClickListener{
             override fun onClick(view: View, position: Int) {
                 try{
                     val result = RealmRepo.getRead(viewModel.mRealm)?.get(position)
@@ -101,6 +101,22 @@ class MainActivity : BaseActivity() {
             }
         })
     }
+
+    // 리스트뷰 어댑터 설정
+//    private var adapter = RealmRVAdapter(
+//        results = null, autoUpdate = true
+//    ).apply {
+//        setItemClickListener(object:RealmRVAdapter.ItemClickListener{
+//            override fun onClick(view: View, position: Int) {
+//                try{
+//                    val result = RealmRepo.getRead(viewModel.mRealm)?.get(position)
+//                    RealmRepo.setUpdate(viewModel.mRealm, result?.idx)
+//                }catch (e:Exception){
+//                    LogUtil.e(TAG, "리스트뷰 어댑터 설정 오류 : $e")
+//                }
+//            }
+//        })
+//    }
 
     // 리스트뷰 어댑터 설정
 //    private var adapter = TotalUserInfoListAdapter().apply {

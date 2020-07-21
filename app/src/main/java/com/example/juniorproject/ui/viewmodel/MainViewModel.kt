@@ -27,18 +27,13 @@ class MainViewModel : ViewModel() {
 
     private val TAG = MainViewModel::class.java.simpleName
 
-    // 액티비티 띄우기
-    var showAct = MutableLiveData<Int>()
-    fun callShowActivity(type:Int){
-        showAct.value = type
-    }
-
     var mRealm = RealmOption.getInstance()!!
 
     var dao = RealmDao(mRealm)
     fun getDataObserved(): LiveData<RealmResults<RealmTotalUserInfoModel>>{
         return dao.getDataObserved()
     }
+
 
 //    val _items = MutableLiveData<ArrayList<RealmTotalUserInfoModel>>(arrayListOf())
 //    val items: LiveData<ArrayList<RealmTotalUserInfoModel>>
@@ -82,6 +77,16 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    // realm 데이터 삭제
+    fun setRealmDataDelete(){
+        try {
+            RealmRepo.setDelete(mRealm)
+//            setListView()
+        }catch (e:Exception){
+            LogUtil.e(TAG, "realm 데이터 삭제 오류 : $e")
+        }
+    }
+
     // 저장된 데이터 불러와서 리스트뷰 연결
 //    fun setListView() {
 //        try {
@@ -95,15 +100,11 @@ class MainViewModel : ViewModel() {
 //        }
 //    }
 
-    // realm 데이터 삭제
-    fun setRealmDataDelete(){
-        try {
-            RealmRepo.setDelete(mRealm)
-//            setListView()
-        }catch (e:Exception){
-            LogUtil.e(TAG, "realm 데이터 삭제 오류 : $e")
-        }
-    }
+    // 액티비티 띄우기
+//    var showAct = MutableLiveData<Int>()
+//    fun callShowActivity(type:Int){
+//        showAct.value = type
+//    }
 
 
 

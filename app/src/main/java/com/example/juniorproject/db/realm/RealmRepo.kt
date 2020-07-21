@@ -13,12 +13,13 @@ object RealmRepo {
 
     // Realm PrimaryKey Index 구하기
     private fun getPrimaryKeyIndex(realm:Realm):Int{
-        val idx = realm.where(RealmTotalUserInfoModel::class.java).max("idx")
-        return if(idx == null){
-            1
-        }else{
-            idx.toInt()+1
-        }
+        val idx = realm.where(RealmTotalUserInfoModel::class.java).max("idx")?:0
+        return idx.toInt() + 1
+//        return if(idx == null){
+//            1
+//        }else{
+//            idx.toInt()+1
+//        }
     }
 
     // 데이터 보기
