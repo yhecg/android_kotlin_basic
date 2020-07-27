@@ -4,6 +4,8 @@
     package="com.example.juniorproject">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -13,10 +15,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:targetApi="n">
-        <activity android:name=".example.mvvm_fragment.VmSharedActivity"></activity>
+        tools:targetApi="n"
+        tools:ignore="AllowBackup">
+        <activity android:name=".example.mvvm_fragment.VmSharedActivity" />
         <activity android:name=".example.mvvm_activity.TestActivity" />
-        <activity android:name=".WebViewTestActivity" />
         <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

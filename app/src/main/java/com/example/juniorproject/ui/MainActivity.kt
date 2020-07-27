@@ -1,6 +1,8 @@
 package com.example.juniorproject.ui
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
@@ -16,9 +18,10 @@ import com.example.juniorproject.example.mvvm_activity.TestActivity
 import com.example.juniorproject.ui.adapter.RealmListAdapter
 import com.example.juniorproject.ui.adapter.RealmRVAdapter
 import com.example.juniorproject.ui.viewmodel.MainViewModel
+import com.example.juniorproject.util.AesUtil
 import com.example.juniorproject.util.LogUtil
 import io.realm.Realm
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.runBlocking
 import kotlin.Exception
 
 /**
@@ -32,11 +35,17 @@ class MainActivity : BaseActivity() {
 
     private lateinit var viewModel: MainViewModel
 
+    @SuppressLint("NewApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         Realm.init(this) // 앱 구동간 한번만 해주면 된다. 메인에서 해주거나 MultiDex 에 해주면 될 듯.
         dataBindingInit()
+
+        AesUtil().encDec()
+        AesUtil(applicationContext).encryptedSharedPreferences()
+        AesUtil(applicationContext).writeFile()
+        AesUtil(applicationContext).readFile()
 
     }
 
@@ -59,7 +68,6 @@ class MainActivity : BaseActivity() {
                 it?.let {
                     adapter.result = it
                     adapter.notifyDataSetChanged()
-                    rvTotalUserInfoList.smoothScrollToPosition(adapter.itemCount-1)
                 }
             })
 

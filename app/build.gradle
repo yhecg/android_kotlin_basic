@@ -25,6 +25,11 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     // DataBinding 에서 필요
     buildFeatures{
         dataBinding = true
@@ -92,5 +97,8 @@ dependencies {
     implementation 'io.realm:android-adapters:3.1.0'
 
     implementation "io.reactivex.rxjava3:rxjava:3.0.0"
+
+    // 암호화
+    implementation "androidx.security:security-crypto:1.1.0-alpha01" // api 23 이상부터 사용 가능
 
 }
