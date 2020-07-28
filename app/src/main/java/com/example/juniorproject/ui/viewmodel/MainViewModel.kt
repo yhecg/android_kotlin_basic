@@ -1,8 +1,11 @@
 package com.example.juniorproject.ui.viewmodel
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.os.Build
 import android.os.Handler
 import android.os.Message
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,6 +16,7 @@ import com.example.juniorproject.db.realm.RealmDao
 import com.example.juniorproject.network.RetrofitApiId
 import com.example.juniorproject.network.RetrofitOption
 import com.example.juniorproject.network.dto.ResponseCommonData
+import com.example.juniorproject.util.AesUtil
 import com.example.juniorproject.util.LogUtil
 import io.realm.*
 import kotlinx.coroutines.*
@@ -27,6 +31,8 @@ class MainViewModel : ViewModel() {
 
     private val TAG = MainViewModel::class.java.simpleName
 
+    lateinit var mContext:Context
+
     var mRealm = RealmOption.getInstance()!!
 
     var dao = RealmDao(mRealm)
@@ -38,6 +44,18 @@ class MainViewModel : ViewModel() {
 //    val _items = MutableLiveData<ArrayList<RealmTotalUserInfoModel>>(arrayListOf())
 //    val items: LiveData<ArrayList<RealmTotalUserInfoModel>>
 //        get() = _items
+
+    // 파일 읽기
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun fileRead(){
+        AesUtil(mContext).readFile()
+    }
+
+    // 파일 쓰기
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun fileWrite(){
+        AesUtil(mContext).writeFile()
+    }
 
     override fun onCleared() {
         LogUtil.d(TAG, "onCleared")

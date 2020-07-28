@@ -44,8 +44,7 @@ class MainActivity : BaseActivity() {
 
         AesUtil().encDec()
         AesUtil(applicationContext).encryptedSharedPreferences()
-        AesUtil(applicationContext).writeFile()
-        AesUtil(applicationContext).readFile()
+
 
     }
 
@@ -63,6 +62,8 @@ class MainActivity : BaseActivity() {
 
             }
             binding.rvTotalUserInfoList.adapter = adapter
+
+            viewModel.mContext = applicationContext
 
             viewModel.getDataObserved().observe(this, Observer {
                 it?.let {

@@ -1,11 +1,13 @@
 package com.example.juniorproject.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Environment
 import android.util.Base64
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.security.crypto.EncryptedFile
 import androidx.security.crypto.EncryptedSharedPreferences
@@ -56,6 +58,7 @@ class AesUtil {
 
 
     // EncryptedFile 파일 읽기
+    @SuppressLint("ShowToast")
     @RequiresApi(Build.VERSION_CODES.M)
     fun readFile(){
         val keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC
@@ -78,6 +81,7 @@ class AesUtil {
             val fileContents = byteStream.toByteArray()
             val result = String(fileContents, charset("UTF-8"))
             LogUtil.d(TAG, "파일 복호화 : $result")
+            Toast.makeText(mContext, result, Toast.LENGTH_LONG).show()
             fileInputStream.close()
         }
     }

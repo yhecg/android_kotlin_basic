@@ -18,6 +18,18 @@
         tools:context=".ui.MainActivity">
 
         <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="파일읽기"
+            android:onClick="@{() -> model.fileRead()}" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="파일쓰기"
+            android:onClick="@{() -> model.fileWrite()}" />
+
+        <Button
             android:id="@+id/btnCoroutineServer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
